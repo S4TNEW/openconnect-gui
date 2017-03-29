@@ -6,9 +6,13 @@ may be found in [shell script](../build_mingw@win.cmd) in project root.
 #### Hints For macOS
 
 ```
+# Install for build
+brew install cmake
+
 # Install dependencies
 brew install qt5
 brew install openconnect
+
 
 cd openconnect-gui
 
@@ -19,6 +23,7 @@ git submodule update
 # Build it
 mkdir build-release
 cd build-release
-Qt5_DIR=/usr/local/opt/qt5/lib/cmake/Qt5 cmake -DCMAKE_BUILD_TYPE=Release ..
+export Qt5_DIR=/usr/local/opt/qt5/lib/cmake/Qt5
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
