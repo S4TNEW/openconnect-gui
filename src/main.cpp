@@ -126,6 +126,8 @@ int pin_callback(void* userdata, int attempt, const char* token_url,
 
 int main(int argc, char* argv[])
 {
+    qputenv("LOG2FILE", "1");
+
 #if !defined(Q_OS_MACOS)
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
@@ -137,7 +139,7 @@ int main(int argc, char* argv[])
     QSettings::setDefaultFormat(QSettings::IniFormat);
 #endif
 
-#ifdef __MACH__
+#ifdef Q_OS_MACOS
     /* Re-launching with root privs on OS X needs Qt to allow setsuid */
     QApplication::setSetuidAllowed(true);
 #endif
@@ -157,10 +159,7 @@ int main(int argc, char* argv[])
     app.setApplicationDisplayName(appDescriptionLong);
     app.setQuitOnLastWindowClosed(false);
 
-    auto fileLog = std::make_unique<FileLogger>();
-    Logger::instance().addMessage(QString("%1 (%2) logging started...").arg(app.applicationDisplayName()).arg(app.applicationVersion()));
-
-#ifdef __MACH__
+#ifdef Q_OS_MACOS
     if (geteuid() != 0) {
         if (relaunch_as_root()) {
             /* We have re-launched with root privs. Exit this process. */
@@ -171,8 +170,12 @@ int main(int argc, char* argv[])
         msgBox.setText(QObject::tr("This program requires root privileges to fully function."));
         msgBox.setInformativeText(QObject::tr("VPN connection establishment would fail."));
         msgBox.exec();
+        return -1;
     }
 #endif
+
+    auto fileLog = std::make_unique<FileLogger>();
+    Logger::instance().addMessage(QString("%1 (%2) logging started...").arg(app.applicationDisplayName()).arg(app.applicationVersion()));
 
     gnutls_global_init();
 #ifndef _WIN32
