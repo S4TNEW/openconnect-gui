@@ -6,12 +6,12 @@ if(APPLE)
     endif()
 
      if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "" FORCE)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "" FORCE)
     endif()
 endif()
 
 project(openconnect-gui
-    VERSION 1.5.1
+    VERSION 1.5.2
     LANGUAGES CXX
 )
 

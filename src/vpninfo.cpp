@@ -32,6 +32,8 @@
 #include <cstdarg>
 #include <cstdio>
 
+static int last_form_empty;
+
 static void stats_vfn(void* privdata, const struct oc_stats* stats)
 {
     VpnInfo* vpn = static_cast<VpnInfo*>(privdata);
@@ -88,9 +90,9 @@ static int process_auth_form(void* privdata, struct oc_auth_form* form)
 
     if (form->error) {
         Logger::instance().addMessage(QLatin1String(form->error));
-        return -1;
     }
 
+    int empty = 1;
     if (form->authgroup_opt) {
         struct oc_form_opt_select* select_opt = form->authgroup_opt;
 
@@ -99,10 +101,12 @@ static int process_auth_form(void* privdata, struct oc_auth_form* form)
             gitems << select_opt->choices[i]->name;
         }
 
-        /* if the configured exists */
-        if (gitems.contains(vpn->ss->get_groupname())) {
+        if (select_opt->nr_choices == 1) {
             openconnect_set_option_value(&select_opt->form,
-                vpn->ss->get_groupname().toLatin1().data());
+                                         select_opt->choices[0]->name);
+        } else if (gitems.contains(vpn->ss->get_groupname())) {
+            openconnect_set_option_value(&select_opt->form,
+                                         vpn->ss->get_groupname().toLatin1().data());
         } else {
             {
                 MyInputDialog dialog(vpn->m,
@@ -168,6 +172,7 @@ static int process_auth_form(void* privdata, struct oc_auth_form* form)
                 goto fail;
 
             openconnect_set_option_value(opt, select_opt->choices[idx]->name);
+            empty = 0;
         } else if (opt->type == OC_FORM_OPT_TEXT) {
             Logger::instance().addMessage(QLatin1String("Text form: ") + QLatin1String(opt->name));
 
@@ -196,6 +201,7 @@ static int process_auth_form(void* privdata, struct oc_auth_form* form)
 
             openconnect_set_option_value(opt, text.toLatin1().data());
             vpn->form_attempt++;
+            empty = 0;
         } else if (opt->type == OC_FORM_OPT_PASSWORD) {
             Logger::instance().addMessage(QLatin1String("Password form: ") + QLatin1String(opt->name));
 
@@ -225,10 +231,17 @@ static int process_auth_form(void* privdata, struct oc_auth_form* form)
             }
             openconnect_set_option_value(opt, text.toLatin1().data());
             vpn->form_pass_attempt++;
+            empty = 0;
         } else {
             Logger::instance().addMessage(QLatin1String("unknown type ") + QString::number((int)opt->type));
         }
     }
+
+    /* prevent infinite loops if the authgroup requires certificate auth only */
+    if (last_form_empty && empty) {
+        return OC_FORM_RESULT_CANCELLED;
+    }
+    last_form_empty = empty;
 
     return OC_FORM_RESULT_OK;
 fail:
