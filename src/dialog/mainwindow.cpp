@@ -51,6 +51,7 @@ extern "C" {
 #include <QSignalTransition>
 #include <QEventTransition>
 #include <QDesktopServices>
+#include <QFileSelector>
 
 #include <cstdarg>
 #include <cstdio>
@@ -103,8 +104,9 @@ MainWindow::MainWindow(QWidget* parent, const QString profileName)
         connect(m_trayIcon, &QSystemTrayIcon::activated,
             this, &MainWindow::iconActivated);
 
-        QIcon icon;
-        icon.addPixmap(TRAY_OFF_ICON, QIcon::Normal, QIcon::Off);
+        QFileSelector selector;
+        QIcon icon(selector.select(QStringLiteral(":/images/network-disconnected.png")));
+        icon.setIsMask(true);
         m_trayIcon->setIcon(icon);
         m_trayIcon->show();
     } else {
@@ -415,10 +417,12 @@ void MainWindow::changeStatus(int val)
         m_disconnectAction->setEnabled(true);
 
         ui->iconLabel->setPixmap(ON_ICON);
-        ui->connectionButton->setIcon(QIcon(":/new/resource/images/process-stop.png"));
+        ui->connectionButton->setIcon(QIcon(":/images/process-stop.png"));
         ui->connectionButton->setText(tr("Disconnect"));
 
-        QIcon icon(TRAY_ON_ICON);
+        QFileSelector selector;
+        QIcon icon(selector.select(QStringLiteral(":/images/network-connected.png")));
+        icon.setIsMask(true);
         m_trayIcon->setIcon(icon);
 
         this->ui->ipV4Label->setText(ip);
@@ -442,7 +446,9 @@ void MainWindow::changeStatus(int val)
     } else if (val == STATUS_CONNECTING) {
 
         if (m_trayIcon) {
-            QIcon icon(TRAY_OFF_ICON);
+            QFileSelector selector;
+            QIcon icon(selector.select(QStringLiteral(":/images/network-disconnected.png")));
+            icon.setIsMask(true);
             m_trayIcon->setIcon(icon);
         }
 
@@ -452,7 +458,7 @@ void MainWindow::changeStatus(int val)
         m_disconnectAction->setEnabled(true);
 
         ui->iconLabel->setPixmap(CONNECTING_ICON);
-        ui->connectionButton->setIcon(QIcon(":/new/resource/images/process-stop.png"));
+        ui->connectionButton->setIcon(QIcon(":/images/process-stop.png"));
         ui->connectionButton->setText(tr("Cancel"));
         blink_timer->start(1500);
 
@@ -484,11 +490,13 @@ void MainWindow::changeStatus(int val)
 
         ui->iconLabel->setPixmap(OFF_ICON);
         ui->connectionButton->setEnabled(true);
-        ui->connectionButton->setIcon(QIcon(":/new/resource/images/network-wired.png"));
+        ui->connectionButton->setIcon(QIcon(":/images/network-wired.png"));
         ui->connectionButton->setText(tr("Connect"));
 
         if (m_trayIcon) {
-            QIcon icon(TRAY_OFF_ICON);
+            QFileSelector selector;
+            QIcon icon(selector.select(QStringLiteral(":/images/network-disconnected.png")));
+            icon.setIsMask(true);
             m_trayIcon->setIcon(icon);
 
             if (this->isHidden() == true)
@@ -503,7 +511,7 @@ void MainWindow::changeStatus(int val)
             Qt::QueuedConnection);
     } else if (val == STATUS_DISCONNECTING) {
         ui->iconLabel->setPixmap(CONNECTING_ICON);
-        ui->connectionButton->setIcon(QIcon(":/new/resource/images/process-stop.png"));
+        ui->connectionButton->setIcon(QIcon(":/images/process-stop.png"));
         ui->connectionButton->setEnabled(false);
         blink_timer->start(1500);
     } else {
@@ -591,7 +599,7 @@ void MainWindow::on_connectClicked()
     VpnInfo* vpninfo = nullptr;
     StoredServer* ss = new StoredServer();
     QFuture<void> future;
-    QString name, str, url;
+    QString name, url;
     QList<QNetworkProxy> proxies;
     QUrl turl;
     QNetworkProxyQuery query;
@@ -654,12 +662,17 @@ void MainWindow::on_connectClicked()
 
         if (url.isEmpty() == false) {
 
-            str = proxies.at(0).user() + ":" + proxies.at(0).password() + "@" + proxies.at(0).hostName();
+            QString str;
+            if (proxies.at(0).user() != 0) {
+                str = proxies.at(0).user() + ":" + proxies.at(0).password() + "@";
+            }
+            str += proxies.at(0).hostName();
             if (proxies.at(0).port() != 0) {
                 str += ":" + QString::number(proxies.at(0).port());
             }
             Logger::instance().addMessage(tr("Setting proxy to: ") + str);
-            openconnect_set_http_proxy(vpninfo->vpninfo, str.toLatin1().data());
+            // FIXME: ...
+            int ret = openconnect_set_http_proxy(vpninfo->vpninfo, str.toLatin1().data());
         }
     }
 
