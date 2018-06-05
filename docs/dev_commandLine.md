@@ -17,15 +17,20 @@ mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar 
 and continue:
 
 ```
+# Install for build
+brew install cmake
+
 # Install dependencies
 brew install qt5
 brew install openconnect
+
 
 cd openconnect-gui
 
 # Build it
 mkdir build-release
 cd build-release
-Qt5_DIR=/usr/local/opt/qt5/lib/cmake/Qt5 cmake -DCMAKE_BUILD_TYPE=Release ..
+export Qt5_DIR=/usr/local/opt/qt5/lib/cmake/Qt5
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
