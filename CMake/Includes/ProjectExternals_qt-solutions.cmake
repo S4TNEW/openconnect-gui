@@ -9,7 +9,7 @@ ExternalProject_Add(qt-solutions-${qt-solutions-TAG}
     UPDATE_DISCONNECTED 0
     UPDATE_COMMAND ""
     
-    GIT_REPOSITORY https://code.qt.io/qt-solutions/qt-solutions.git
+    GIT_REPOSITORY git://code.qt.io/qt-solutions/qt-solutions.git
     GIT_TAG ${qt-solutions-TAG}
     GIT_SHALLOW 1
     
