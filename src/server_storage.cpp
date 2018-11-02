@@ -22,14 +22,18 @@
 #include <QSettings>
 #include <cstdio>
 
-const char* const StoredServer::m_vpnProtocol[] = { "anyconnect", "nc" };
-
 StoredServer::~StoredServer(void)
 {
 }
 
 StoredServer::StoredServer()
-    : m_protocol_id(0)
+    : m_batch_mode{ false }
+    , m_minimize_on_connect{ false }
+    , m_proxy{ false }
+    , m_disable_udp{ false }
+    , m_reconnect_timeout{ 300 }
+    , m_dtls_attempt_period{ 25 }
+    , m_protocol_id(0)
     , m_server_hash_algo(0)
 {
     set_window(nullptr);
@@ -154,10 +158,10 @@ int StoredServer::load(QString& name)
     }
 
     this->m_username = settings.value("username").toString();
-    this->m_batch_mode = settings.value("batch").toBool();
-    this->m_proxy = settings.value("proxy").toBool();
-    this->m_disable_udp = settings.value("disable-udp").toBool();
-    this->m_minimize_on_connect = settings.value("minimize-on-connect").toBool();
+    this->m_batch_mode = settings.value("batch", false).toBool();
+    this->m_proxy = settings.value("proxy", false).toBool();
+    this->m_disable_udp = settings.value("disable-udp", false).toBool();
+    this->m_minimize_on_connect = settings.value("minimize-on-connect", false).toBool();
     this->m_reconnect_timeout = settings.value("reconnect-timeout", 300).toInt();
     this->m_dtls_attempt_period = settings.value("dtls_attempt_period", 25).toInt();
 
@@ -217,6 +221,7 @@ int StoredServer::load(QString& name)
     this->m_token_type = settings.value("token-type").toInt();
 
     m_protocol_id = settings.value("protocol-id", 0).toInt();
+    m_protocol_name = settings.value("protocol-name").toString();
 
     settings.endGroup();
     return rval;
@@ -260,6 +265,7 @@ int StoredServer::save()
     settings.setValue("token-type", this->m_token_type);
 
     settings.setValue("protocol-id", m_protocol_id);
+    settings.setValue("protocol-name", m_protocol_name);
 
     settings.endGroup();
     return 0;
@@ -415,11 +421,6 @@ void StoredServer::set_token_type(const int type)
     this->m_token_type = type;
 }
 
-const char* StoredServer::get_protocol() const
-{
-    return m_vpnProtocol[m_protocol_id];
-}
-
 int StoredServer::get_protocol_id() const
 {
     return m_protocol_id;
@@ -428,6 +429,17 @@ int StoredServer::get_protocol_id() const
 void StoredServer::set_protocol_id(const int id)
 {
     m_protocol_id = id;
+}
+
+const char* StoredServer::get_protocol_name() const
+{
+    QByteArray data{ m_protocol_name.toLatin1() };
+    return data.data();
+}
+
+void StoredServer::set_protocol_name(const QString name)
+{
+    m_protocol_name = name;
 }
 
 void StoredServer::set_server_hash(const unsigned algo, const QByteArray& hash)

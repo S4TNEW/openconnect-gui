@@ -658,7 +658,7 @@ void MainWindow::on_connectClicked()
 
     /* ss is now deallocated by vpninfo */
     try {
-        vpninfo = new VpnInfo(QString("%1 %2").arg(qApp->applicationName()).arg(qApp->applicationVersion()), ss, this);
+        vpninfo = new VpnInfo(QStringLiteral("Open AnyConnect VPN Agent"), ss, this);
     } catch (std::exception& ex) {
         QMessageBox::information(this,
             qApp->applicationName(),
@@ -934,7 +934,7 @@ void MainWindow::on_actionAbout_triggered()
     txt += tr("<br>Based on");
     txt += tr("<br>- <a href=\"https://www.infradead.org/openconnect\">OpenConnect</a> ") + QLatin1String(openconnect_get_version());
     txt += tr("<br>- <a href=\"https://www.gnutls.org\">GnuTLS</a> v") + QLatin1String(gnutls_check_version(nullptr));
-    txt += tr("<br>- <a href=\"https://github.com/gabime/spdlog\">spdlog</a> v") + QLatin1String(SPDLOG_VERSION);
+    txt += tr("<br>- <a href=\"https://github.com/gabime/spdlog\">spdlog</a> v%1.%2.%3").arg(QString::number(SPDLOG_VER_MAJOR)).arg(QString::number(SPDLOG_VER_MINOR)).arg(QString::number(SPDLOG_VER_PATCH));
     txt += tr("<br>- <a href=\"https://www.qt.io\">Qt</a> v%1").arg(QT_VERSION_STR);
     txt += tr("<br><br>%1<br>").arg(appCopyright);
     txt += tr("<br><i>%1</i> comes with ABSOLUTELY NO WARRANTY. This is free software, "

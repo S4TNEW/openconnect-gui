@@ -7,7 +7,7 @@ branches:
 image: Visual Studio 2017
 clone_depth: 100
 environment:
-  QT5: C:\Qt\5.10.1\mingw53_32
+  QT5: C:\Qt\5.11\mingw53_32
   MINGW: C:\Qt\Tools\mingw530_32
   NSIS: C:\Program Files (x86)\NSIS
   matrix:
@@ -36,11 +36,15 @@ build_script:
 
     cmake --build . --config %BUILD_TYPE% --target %TARGET%
 
+    move /Y *.exe ..
+
+    move /Y *.exe.sha512 ..
+
 test: off
 artifacts:
-- path: build\openconnect-gui*.exe
+- path: openconnect-gui*.exe
   name: 'Installer'
-- path: build\openconnect-gui*.exe.sha512
+- path: openconnect-gui*.exe.sha512
   name: 'Installer - sha512 hash'
 deploy:
 - provider: GitHub
@@ -49,7 +53,7 @@ deploy:
   description: TBD...
   auth_token:
     secure: x7ZSG2iQyNioIlyguchg7/Tzl5NzY521hr8Op0H4EQt/kPIndb2KHe/OlGiX+GSK
-  artifact: /build\/openconnect-gui-.*\.exe.*/
+  artifact: /openconnect-gui-.*\.exe.*/
   draft: true
   force_update: true
   on:

@@ -12,6 +12,10 @@ the required security.
 
 Look to [OpenConnect-GUI](http://openconnect.github.io/openconnect-gui/) project webpage for detailed description, screen shots and other related projects.
 
+## Supported Platforms
+- Microsoft Windows 7 and newer
+- macOS 10.11 and newer
+
 ## Development info
 - [Software requirements](docs/sw_requirements.md)
 - [Development with QtCreator](docs/dev_QtCreator.md)
@@ -21,14 +25,7 @@ Look to [OpenConnect-GUI](http://openconnect.github.io/openconnect-gui/) project
 - [Creating release package](docs/release.md)
 - [OpenConnect library compilation and dependencies](docs/openconnect.md)
 - [Web page maintenance](docs/webpage.md)
-
-If you are brave and you would like to try [upcoming development snapshots](https://goo.gl/P88mTi) of OpenConnect-GUI or [OpenConnect](https://www.infradead.org/openconnect/) for Windows. (I'm not developer on second mentioned project, but this GUI is based on this great project).
-
-These are unofficial builds, without warranty, please don't complain... ;-)
+- [Snapshot builds](docs/snapshots.md)
 
 # License
 The content of this project itself is licensed under the [GNU General Public License v2](LICENSE.txt)
-
-
-
-

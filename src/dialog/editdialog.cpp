@@ -18,6 +18,7 @@
  */
 
 #include "editdialog.h"
+#include "VpnProtocolModel.h"
 #include "common.h"
 #include "server_storage.h"
 #include "ui_editdialog.h"
@@ -65,9 +66,6 @@ void EditDialog::load_win_certs()
 {
 #ifdef USE_SYSTEM_KEYS
     QString prekey = ss->get_key_url();
-    if (prekey.isEmpty() == false) {
-        ui->userKeyEdit->setText(prekey);
-    }
 
     this->winCerts.clear();
     ui->loadWinCertList->clear();
@@ -92,6 +90,9 @@ void EditDialog::load_win_certs()
             ui->loadWinCertList->addItem(l);
             if (prekey.isEmpty() == false) {
                 if (QString::compare(prekey, QString::fromUtf8(key_url), Qt::CaseSensitive) == 0) {
+                    ui->userCertEdit->setText(cert_url);
+                    ui->userKeyEdit->setText(prekey);
+
                     idx = row;
                 }
             }
@@ -118,6 +119,9 @@ EditDialog::EditDialog(QString server, QWidget* parent)
     , ss(new StoredServer())
 {
     ui->setupUi(this);
+
+    VpnProtocolModel* model = new VpnProtocolModel(this);
+    ui->protocolComboBox->setModel(model);
 
     if (ss->load(server) < 0) {
         QMessageBox::information(this,
@@ -250,6 +254,7 @@ void EditDialog::on_buttonBox_accepted()
     }
 
     ss->set_protocol_id(ui->protocolComboBox->currentIndex());
+    ss->set_protocol_name(ui->protocolComboBox->currentData(Qt::UserRole + 1).toString());
 
     ss->save();
     this->accept();
@@ -266,6 +271,7 @@ void EditDialog::on_userCertButton_clicked()
         tr("Open certificate"), "",
         tr("Certificate Files (*.crt *.pem *.der *.p12)"));
 
+    // FIXME: check empty result
     ui->userCertEdit->setText(filename);
 }
 
@@ -275,6 +281,7 @@ void EditDialog::on_userKeyButton_clicked()
         tr("Open private key"), "",
         tr("Private key Files (*.key *.pem *.der *.p8 *.p12)"));
 
+    // FIXME: check empty result
     ui->userKeyEdit->setText(filename);
 }
 
@@ -284,6 +291,7 @@ void EditDialog::on_caCertButton_clicked()
         tr("Open certificate"), "",
         tr("Certificate Files (*.crt *.pem *.der)"));
 
+    // FIXME: check empty result
     ui->caCertEdit->setText(filename);
 }
 
@@ -364,4 +372,17 @@ void EditDialog::on_userCertEdit_textChanged(const QString& arg1)
 void EditDialog::on_userKeyEdit_textChanged(const QString& arg1)
 {
     ui->userKeyClear->setEnabled(!arg1.isEmpty());
+}
+
+void EditDialog::on_loadWinCertList_itemSelectionChanged()
+{
+    ui->loadWinCert->setEnabled(!ui->loadWinCertList->selectedItems().empty());
+}
+
+void EditDialog::on_resetWinCertSelection_clicked()
+{
+    ui->loadWinCertList->setCurrentRow(-1);
+
+    on_userCertClear_clicked();
+    on_userKeyClear_clicked();
 }

@@ -57,6 +57,10 @@ private slots:
     void on_userCertEdit_textChanged(const QString& arg1);
     void on_userKeyEdit_textChanged(const QString& arg1);
 
+    void on_loadWinCertList_itemSelectionChanged();
+
+    void on_resetWinCertSelection_clicked();
+
 private:
     void load_win_certs();
 
