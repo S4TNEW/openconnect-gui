@@ -10,15 +10,15 @@
 echo "======================================================================="
 echo " Preparing sandbox..."
 echo "======================================================================="
-mkdir -pv build-release-$MSYSTEM
+mkdir -pv work/build-release-$MSYSTEM
 
 echo "======================================================================="
 echo " Generating project..."
 echo "======================================================================="
-cd build-release-$MSYSTEM
+cd work/build-release-$MSYSTEM
 cmake -G "MSYS Makefiles" \
-	-DCMAKE_BUILD_TYPE=Release \
-	../..
+    -DCMAKE_BUILD_TYPE=Release \
+    ../../..
 
 echo "======================================================================="
 echo " Compiling..."
@@ -31,14 +31,14 @@ make -j5
 # rd /s /q out
 # md out
 # windeployqt ^
-# 	src\openconnect-gui.exe ^
-# 	--verbose 1 ^
-# 	--compiler-runtime ^
-# 	--release ^
-# 	--force ^
-# 	--no-webkit2 ^
-# 	--no-quick-import ^
-# 	--no-translations
+#   src\openconnect-gui.exe ^
+#   --verbose 1 ^
+#   --compiler-runtime ^
+#   --release ^
+#   --force ^
+#   --no-webkit2 ^
+#   --no-quick-import ^
+#   --no-translations
 
 echo "======================================================================="
 echo " Packaging..."
@@ -47,7 +47,7 @@ cmake .
 make package VERBOSE=1
 # make package_source VERBOSE=1
 
-mv -vf *.exe ..
-mv -vf *.exe.sha512 ..
+mv -vf *.exe ../..
+mv -vf *.exe.sha512 ../..
 
 cd ..

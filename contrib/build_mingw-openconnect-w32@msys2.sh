@@ -2,6 +2,11 @@
 # Sample script to checkout & build 'openconnect' project
 # with mingw32 on MSYS2 toolchain
 #
+# It should be used only as illustration how to build application
+# and create an installer package
+#
+# (c) 2018, Lubomir Carik
+#
 
 [ "$MSYSTEM" != "MINGW32" ] && exit -1
 echo "Starting under MINGW32 build environment..."
@@ -9,7 +14,7 @@ echo "Starting under MINGW32 build environment..."
 export OC_TAG=v7.08
 export STOKEN_TAG=v0.92
 
-pacman --needed -S \
+pacman --needed --noconfirm -S \
     mingw-w64-i686-gnutls \
     mingw-w64-i686-libidn2 \
     mingw-w64-i686-libunistring \

@@ -1,7 +1,8 @@
 option(PROJ_GNUTLS_DEBUG "Enable GnuTLS debug mode" OFF)
-if(MINGW)
-    option(PROJ_UAC_ON "Enable UAC (don't turn it off in production)" ON)
 
+option(PROJ_ADMIN_PRIV_ELEVATION "Admin privileges elevation; don't turn it off in production!! (UAC on Windows) " ON)
+
+if(MINGW)
     set(DEFAULT_VPNC_SCRIPT "vpnc-script.js")
 elseif(APPLE)
     set(DEFAULT_VPNC_SCRIPT "../Resources/vpnc-script")
@@ -13,8 +14,9 @@ option(PROJ_INI_SETTINGS "Store the settings in INI files." OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_compile_options("-Wall")
 add_compile_options("-Wextra")

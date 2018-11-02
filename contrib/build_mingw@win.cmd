@@ -11,10 +11,10 @@ REM
 echo "======================================================================="
 echo " Preparing environment..."
 echo "======================================================================="
-REM look for "Qt 5.10.1 for Desktop (MinGW 5.3.0 32 bit)" StartMenu item
+REM look for "Qt 5.11.1 for Desktop (MinGW 5.3.0 32 bit)" StartMenu item
 REM and check 'qtenv2.bat'
 echo Setting up environment for Qt usage...
-set PATH=C:\Dev\Qt\5.10.1\mingw53_32\bin\;%PATH%
+set PATH=C:\Dev\Qt\5.11.1\mingw53_32\bin\;%PATH%
 
 echo Setting up environment for 'mingw32' usage...
 set PATH=c:\Dev\Qt\Tools\mingw530_32\bin\;%PATH%
@@ -32,9 +32,9 @@ echo Setting up environment for 'clang' usage...
 set PATH="C:\Dev\LLVM\bin\";%PATH%
 
 echo Setting up environment for 'wix' toolset usage...
-set PATH="C:\Program Files (x86)\WiX Toolset v3.10\bin";%PATH%
-set WIX="C:\Program Files (x86)\WiX Toolset v3.10\"
-set CPACK_WIX_ROOT="C:\Program Files (x86)\WiX Toolset v3.10\"
+set PATH="C:\Program Files (x86)\WiX Toolset v3.11\bin";%PATH%
+set WIX="C:\Program Files (x86)\WiX Toolset v3.11\"
+set CPACK_WIX_ROOT="C:\Program Files (x86)\WiX Toolset v3.11\"
 
 echo "======================================================================="
 echo " Preparing sandbox..."
@@ -47,8 +47,8 @@ echo " Generating project..."
 echo "======================================================================="
 cd build-release
 cmake -G "MinGW Makefiles" ^
-	-DCMAKE_BUILD_TYPE=Release ^
-	..\..\
+    -DCMAKE_BUILD_TYPE=Release ^
+    ..\..\
 
 echo "======================================================================="
 echo " Compiling..."
@@ -61,14 +61,14 @@ REM echo "======================================================================
 REM rd /s /q out
 REM md out
 REM windeployqt ^
-REM 	src\openconnect-gui.exe ^
-REM 	--verbose 1 ^
-REM 	--compiler-runtime ^
-REM 	--release ^
-REM 	--force ^
-REM 	--no-webkit2 ^
-REM 	--no-quick-import ^
-REM 	--no-translations
+REM     src\openconnect-gui.exe ^
+REM     --verbose 1 ^
+REM     --compiler-runtime ^
+REM     --release ^
+REM     --force ^
+REM     --no-webkit2 ^
+REM     --no-quick-import ^
+REM     --no-translations
 
 echo "======================================================================="
 echo " Packaging..."
