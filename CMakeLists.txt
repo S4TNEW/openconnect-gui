@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 if(APPLE)
      if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.11" CACHE STRING "" FORCE)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12" CACHE STRING "" FORCE)
     endif()
 endif()
 
@@ -17,7 +17,7 @@ set(PRODUCT_NAME_SHORT "OpenConnect-GUI")
 set(PRODUCT_NAME_LONG "OpenConnect-GUI VPN client")
 set(PRODUCT_NAME_COMPANY "OpenConnect-GUI Team")
 set(PRODUCT_NAME_COMPANY_DOMAIN "openconnect.github.io")
-set(PRODUCT_NAME_COPYRIGHT_SHORT "Copyright (C) 2016-2018 OpenConnect-GUI Team")
+set(PRODUCT_NAME_COPYRIGHT_SHORT "Copyright (C) 2016-2019 OpenConnect-GUI Team")
 set(PRODUCT_NAME_COPYRIGHT_FULL "Copyright (C) 2014-2015 Red Hat Inc.<br>${PRODUCT_NAME_COPYRIGHT_SHORT}")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake/Modules/")

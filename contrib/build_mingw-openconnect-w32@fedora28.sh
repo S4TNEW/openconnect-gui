@@ -5,10 +5,10 @@
 # It should be used only as illustration how to build application
 # and create an installer package
 #
-# (c) 2018, Lubomir Carik
+# (c) 2018-2019, Lubomir Carik
 #
 
-export OC_TAG=v7.08
+export OC_TAG=v8.02
 export STOKEN_TAG=v0.92
 
 dnf -y install \
