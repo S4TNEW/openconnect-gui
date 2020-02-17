@@ -25,9 +25,8 @@ brew install qt5
 brew install openconnect
 
 
-cd openconnect-gui
-
 # Build it
+rm -rf build-release
 mkdir build-release
 cd build-release
 export Qt5_DIR=/usr/local/opt/qt5/lib/cmake/Qt5
